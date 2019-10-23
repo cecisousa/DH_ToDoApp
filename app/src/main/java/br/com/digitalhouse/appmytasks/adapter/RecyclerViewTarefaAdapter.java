@@ -8,22 +8,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 import br.com.digitalhouse.appmytasks.R;
-import br.com.digitalhouse.appmytasks.interfaces.OnClick;
 import br.com.digitalhouse.appmytasks.model.Tarefa;
 
 public class RecyclerViewTarefaAdapter extends RecyclerView.Adapter<RecyclerViewTarefaAdapter.ViewHolder> {
 
     private List<Tarefa> tarefaList;
-    private OnClick listener;
 
-    public RecyclerViewTarefaAdapter(List<Tarefa> tarefaList, OnClick listener) {
+    public RecyclerViewTarefaAdapter(List<Tarefa> tarefaList) {
         this.tarefaList = tarefaList;
-        this.listener = listener;
     }
 
     @NonNull
@@ -37,8 +32,6 @@ public class RecyclerViewTarefaAdapter extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Tarefa tarefa = tarefaList.get(position);
         holder.onBind(tarefa);
-
-        holder.itemView.setOnClickListener(view -> listener.OnClick(tarefa));
     }
 
     @Override

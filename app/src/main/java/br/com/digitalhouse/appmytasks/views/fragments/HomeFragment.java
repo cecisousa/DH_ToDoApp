@@ -50,10 +50,9 @@ public class HomeFragment extends Fragment {
         initViews(view);
 
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(LinearLayoutManager, this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //TODO: Fazer as chamadas necessárias quando inicializado o fragmento
-
+        buscaTodasTarefasRecentes();
         return view;
     }
 
@@ -73,7 +72,5 @@ public class HomeFragment extends Fragment {
                     Log.i("TAG", "Método getAllTarefas" + throwable.getMessage());
                 });
     }
-
-    //TODO: Desenvolver o método que busca as tarefas em ordem decrecente com um limite de 5 itens
 
 }

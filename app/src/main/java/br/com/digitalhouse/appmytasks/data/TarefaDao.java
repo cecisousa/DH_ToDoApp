@@ -16,20 +16,8 @@ public interface TarefaDao {
     @Insert
     void inserirTarefa (Tarefa tarefa);
 
-    @Insert
-    void deletarTarefa (Tarefa tarefa);
-
-    @Insert
-    void atualizarTarefa (Tarefa tarefa);
-
     @Query("SELECT * FROM tarefas")
-    Observable<List<Tarefa>> getAlltarefas();
-
-    @Query("SELECT * FROM tarefas WHERE id = :id")
-    Tarefa getById(long id);
-
-    @Query("SELECT * FROM tarefas WHERE tarefa = :nomeTarefa")
-    Tarefa getByNome(String nomeTarefa);
+    Observable<List<Tarefa>> todasTarefas();
 
     @Query("SELECT * FROM tarefas ORDER BY id DESC LIMIT 5")
     Observable<List<Tarefa>> tarefasRecentes();

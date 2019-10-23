@@ -44,14 +44,23 @@ public class NovaTarefaFragment extends Fragment {
             String nomeTarefa = nome.getEditText().getText().toString();
             String descricaoTarefa = descricao.getEditText().getText().toString();
 
-            new Thread(() -> {
-                Tarefa tarefa = new Tarefa(nomeTarefa, descricaoTarefa);
+            if (!nomeTarefa.isEmpty() && !descricaoTarefa.isEmpty()) {
+                new Thread(() -> {
+                    Tarefa tarefa = new Tarefa(nomeTarefa, descricaoTarefa);
 
-                if (nome != null) {
-                    tarefaDao.inserirTarefa(tarefa);
-                }
-            }).start();
+                    if (tarefa != null) {
+                        tarefaDao.inserirTarefa((tarefa));
+                    }
+                }).start();
 
+                nome.getEditText().setText("");
+                descricao.getEditText().setText("");
+
+                Snackbar.make(nome, "Tarefa salva com sucesso!", Snackbar.LENGTH_LONG).show();
+            } else {
+                nome.setError("Preencha o nome da tarefa!");
+                descricao.setError("Preencha a descrição da tarefa!");
+            }
         });
 
         return view;
@@ -63,7 +72,6 @@ public class NovaTarefaFragment extends Fragment {
         btnAdd = view.findViewById(R.id.floatingActionButtonSalvar);
         tarefaDao = Database.getDatabase(getContext()).tarefaDao();
 
-        //TODO: inicializar o DAO
     }
 
 

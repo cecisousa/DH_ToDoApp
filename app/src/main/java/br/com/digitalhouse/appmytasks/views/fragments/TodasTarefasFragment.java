@@ -27,6 +27,7 @@ import io.reactivex.schedulers.Schedulers;
  * A simple {@link Fragment} subclass.
  */
 public class TodasTarefasFragment extends Fragment {
+    private TarefaDao tarefaDao;
     private RecyclerView recyclerView;
     private RecyclerViewTarefaAdapter adapter;
     private List<Tarefa> tarefaList = new ArrayList<>();
@@ -42,7 +43,10 @@ public class TodasTarefasFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_todas_tarefas, container, false);
 
-        //TODO: Fazer as chamadas necessárias quando inicializado o fragmento
+        initViews(view);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         buscaTodasTarefas();
 
@@ -52,11 +56,20 @@ public class TodasTarefasFragment extends Fragment {
     private void initViews(View view) {
         recyclerView = view.findViewById(R.id.recyclerViewTodasTarefas);
         adapter = new RecyclerViewTarefaAdapter(tarefaList);
+        tarefaDao = Database.getDatabase(getContext()).tarefaDao();
 
-        //TODO: inicializar o DAO
     }
 
-    //TODO: Desenvolver o método que busca todas as tarefas
 
+    private void buscaTodasTarefas () {
+        tarefaDao.todasTarefas()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(tarefas -> {
+                    adapter.atualizaListaTarefas(tarefas);
+                }, throwable -> {
+                    Log.i("TAG", "Método getAllTarefas" + throwable.getMessage());
+                });
+    }
 
 }
