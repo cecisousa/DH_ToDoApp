@@ -4,10 +4,13 @@ import android.content.Context;
 
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
 import br.com.digitalhouse.appmytasks.model.pojos.Tarefa;
 
 @androidx.room.Database(entities = {Tarefa.class}, version = 1, exportSchema = false)
+@TypeConverters(Converter.class)
 public abstract class Database extends RoomDatabase{
 
     private static volatile Database INSTANCE;
