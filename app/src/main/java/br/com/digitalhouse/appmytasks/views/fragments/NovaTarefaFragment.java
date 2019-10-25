@@ -57,6 +57,8 @@ public class NovaTarefaFragment extends Fragment {
                         Log.i("LOG", "Tarefa inserida no banco" + tarefaRetornada.toString());
                     });
 
+//                    o método acima serve apenas para ver a aplicação funcionando
+
                 nome.getEditText().setText("");
                 descricao.getEditText().setText("");
 
