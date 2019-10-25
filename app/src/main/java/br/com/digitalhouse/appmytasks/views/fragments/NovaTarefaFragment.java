@@ -4,7 +4,9 @@ package br.com.digitalhouse.appmytasks.views.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +16,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import br.com.digitalhouse.appmytasks.R;
-import br.com.digitalhouse.appmytasks.data.Database;
-import br.com.digitalhouse.appmytasks.data.TarefaDao;
-import br.com.digitalhouse.appmytasks.model.Tarefa;
+import br.com.digitalhouse.appmytasks.model.data.Database;
+import br.com.digitalhouse.appmytasks.model.data.TarefaDao;
+import br.com.digitalhouse.appmytasks.model.pojos.Tarefa;
+import br.com.digitalhouse.appmytasks.viewmodel.NovaTarefaFragmentViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +28,7 @@ public class NovaTarefaFragment extends Fragment {
     private TextInputLayout nome;
     private TextInputLayout descricao;
     private FloatingActionButton btnAdd;
-    private TarefaDao tarefaDao;
+    private NovaTarefaFragmentViewModel viewModel;
 
     public NovaTarefaFragment() {
         // Required empty public constructor
@@ -45,13 +48,14 @@ public class NovaTarefaFragment extends Fragment {
             String descricaoTarefa = descricao.getEditText().getText().toString();
 
             if (!nomeTarefa.isEmpty() && !descricaoTarefa.isEmpty()) {
-                new Thread(() -> {
+
                     Tarefa tarefa = new Tarefa(nomeTarefa, descricaoTarefa);
 
-                    if (tarefa != null) {
-                        tarefaDao.inserirTarefa((tarefa));
-                    }
-                }).start();
+                    viewModel.insereTarefaBancoDados(tarefa);
+
+                    viewModel.retornaTarefa().observe(this, tarefaRetornada -> {
+                        Log.i("LOG", "Tarefa inserida no banco" + tarefaRetornada.toString());
+                    });
 
                 nome.getEditText().setText("");
                 descricao.getEditText().setText("");
@@ -70,7 +74,7 @@ public class NovaTarefaFragment extends Fragment {
         nome = view.findViewById(R.id.textInpuLayoutNome);
         descricao = view.findViewById(R.id.textInputLayoutDescricao);
         btnAdd = view.findViewById(R.id.floatingActionButtonSalvar);
-        tarefaDao = Database.getDatabase(getContext()).tarefaDao();
+        viewModel = ViewModelProviders.of(this).get(NovaTarefaFragmentViewModel.class);
 
     }
 

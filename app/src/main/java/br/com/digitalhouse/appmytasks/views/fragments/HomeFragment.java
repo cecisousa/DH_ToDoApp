@@ -4,6 +4,8 @@ package br.com.digitalhouse.appmytasks.views.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,18 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.digitalhouse.appmytasks.R;
-import br.com.digitalhouse.appmytasks.adapter.RecyclerViewTarefaAdapter;
-import br.com.digitalhouse.appmytasks.data.Database;
-import br.com.digitalhouse.appmytasks.data.TarefaDao;
-import br.com.digitalhouse.appmytasks.model.Tarefa;
+import br.com.digitalhouse.appmytasks.viewmodel.HomeFragmentViewModel;
+import br.com.digitalhouse.appmytasks.views.adapter.RecyclerViewTarefaAdapter;
+import br.com.digitalhouse.appmytasks.model.data.Database;
+import br.com.digitalhouse.appmytasks.model.data.TarefaDao;
+import br.com.digitalhouse.appmytasks.model.pojos.Tarefa;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -31,10 +30,11 @@ import io.reactivex.schedulers.Schedulers;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-    private TarefaDao tarefaDao;
     private RecyclerView recyclerView;
     private RecyclerViewTarefaAdapter adapter;
     private List<Tarefa> tarefaList = new ArrayList<>();
+    private HomeFragmentViewModel viewModel;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -52,25 +52,19 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        buscaTodasTarefasRecentes();
+        viewModel.buscaTarefasRecentes();
+
+        viewModel.retornaListaTarefa().observe(this, tarefas -> {
+            adapter.atualizaListaTarefas(tarefas);
+        });
+
         return view;
     }
 
     private void initViews(View view) {
         recyclerView = view.findViewById(R.id.recyclerViewUltimasTarefas);
         adapter = new RecyclerViewTarefaAdapter(tarefaList);
-        tarefaDao = Database.getDatabase(getContext()).tarefaDao();
-    }
-
-    private void buscaTodasTarefasRecentes () {
-        tarefaDao.tarefasRecentes()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(tarefas -> {
-                    adapter.atualizaListaTarefas(tarefas);
-                }, throwable -> {
-                    Log.i("TAG", "Método getAllTarefas" + throwable.getMessage());
-                });
+        viewModel = ViewModelProviders.of(this).get(HomeFragmentViewModel.class);
     }
 
 }

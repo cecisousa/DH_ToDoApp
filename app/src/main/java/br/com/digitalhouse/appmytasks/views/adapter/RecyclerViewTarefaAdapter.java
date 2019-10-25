@@ -1,4 +1,4 @@
-package br.com.digitalhouse.appmytasks.adapter;
+package br.com.digitalhouse.appmytasks.views.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import br.com.digitalhouse.appmytasks.R;
-import br.com.digitalhouse.appmytasks.model.Tarefa;
+import br.com.digitalhouse.appmytasks.model.pojos.Tarefa;
 
 public class RecyclerViewTarefaAdapter extends RecyclerView.Adapter<RecyclerViewTarefaAdapter.ViewHolder> {
 

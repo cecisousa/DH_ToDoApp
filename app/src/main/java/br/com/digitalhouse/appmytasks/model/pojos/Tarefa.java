@@ -1,4 +1,4 @@
-package br.com.digitalhouse.appmytasks.model;
+package br.com.digitalhouse.appmytasks.model.pojos;
 
 import android.os.Parcel;
 import android.os.Parcelable;
